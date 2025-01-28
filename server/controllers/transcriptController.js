@@ -1,4 +1,4 @@
-export const generateFromTranscript = async (req, res) => {
+export const generateTranscript = async (req, res) => {
   try {
   } catch (error) {}
 };

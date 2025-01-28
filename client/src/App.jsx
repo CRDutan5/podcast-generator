@@ -57,8 +57,17 @@ function App() {
 
   const handleAudioSubmit = (e) => {
     e.preventDefault();
+    if (!file) {
+      alert(`You must attach an audio file!`);
+      return;
+    }
     try {
-    } catch (error) {}
+      // Upload audio file
+      // Grab that audio file and parse it into a transcript
+      // Use the newly created transcript and let Gemini create a podcast
+    } catch (error) {
+      console.error("Failed to transfer audio", error);
+    }
   };
 
   const playTextToSpeech = () => {
@@ -108,7 +117,11 @@ function App() {
       <form
         action="submit"
         className="flex flex-col h-50 gap-y-6"
-        onSubmit={handleTranscriptSubmit}
+        onSubmit={
+          transcriptType === "file-upload"
+            ? handleAudioSubmit
+            : handleTranscriptSubmit
+        }
       >
         {transcriptType === "file-upload" ? (
           <input type="file" onChange={handleFileChange} />
