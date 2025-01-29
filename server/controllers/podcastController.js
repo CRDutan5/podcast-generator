@@ -20,7 +20,7 @@ export const generatePodcast = async (req, res) => {
   try {
     const { transcript } = req.body;
     // const prompt = `Below I will attach a transcript to give you some context. Your job will be to create a podcast transcript of two people that is about 3 minutes long. ${transcript}`;
-    const prompt = `Create a small joke with the given transcript: ${transcript}`;
+    const prompt = `Create a small podcast with the given transcript: ${transcript}`;
 
     const result = await model.generateContent(prompt);
     const generatedTranscript = result.response.text();

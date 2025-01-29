@@ -44,7 +44,7 @@ export const generateTranscript = async (req, res) => {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const result = await model.generateContent([
-      "Briefly tell me about this audio clip.",
+      "Create a small podcast with the topic of the information I gave you",
       {
         fileData: {
           fileUri: uploadResult.file.uri,

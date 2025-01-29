@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
@@ -10,6 +10,7 @@ function App() {
   const [podcastScript, setPodcastScript] = useState("");
   const [displayPlayButton, setDisplayPlayButton] = useState(false);
   const [textDisabled, setTextDisabled] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
   const handleTranscriptTypeSelection = (e) => {
     if (e.target.id === "text-upload") {
@@ -18,6 +19,7 @@ function App() {
     if (e.target.id === "file-upload") {
       setTranscript("");
     }
+    setPodcastScript("");
     setTranscriptType(e.target.id);
   };
 
@@ -47,7 +49,6 @@ function App() {
         }
       );
       const data = await response.json();
-      console.log(data);
       setPodcastScript(data.transcript);
       setDisplayPlayButton(true);
     } catch (error) {
@@ -78,15 +79,12 @@ function App() {
       const data = await response.json();
       setPodcastScript(data.transcript);
       setDisplayPlayButton(true);
-      console.log("Transcript:", data.transcript);
       alert("Transcript generated successfully!");
     } catch (error) {
       console.error("Failed to transfer audio", error);
       alert("Something went wrong while processing the audio.");
     }
   };
-
-  console.log(podcastScript);
 
   const playTextToSpeech = () => {
     if (speechSynthesis.paused && speechSynthesis.speaking) {
@@ -108,8 +106,15 @@ function App() {
       speechSynthesis.pause();
     }
   };
-  console.log("transcript", transcriptType);
-  console.log("file", file);
+
+  useEffect(() => {
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+      setDisplayPlayButton(false);
+      setTextDisabled(false);
+    }
+  }, [transcriptType]);
 
   return (
     <div className="min-h-[100vh] flex align-middle flex-col justify-center items-center bg-blue-200">
