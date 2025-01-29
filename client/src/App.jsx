@@ -55,18 +55,32 @@ function App() {
     }
   };
 
-  const handleAudioSubmit = (e) => {
+  const handleAudioSubmit = async (e) => {
     e.preventDefault();
     if (!file) {
       alert(`You must attach an audio file!`);
       return;
     }
     try {
-      // Upload audio file
-      // Grab that audio file and parse it into a transcript
-      // Use the newly created transcript and let Gemini create a podcast
+      const formData = new FormData();
+      formData.append("audio", file);
+
+      const response = await fetch(
+        `http://localhost:3000/api/generate-transcript`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to generate transcript");
+      }
+      const data = await response.json();
+      console.log("Transcript:", data.transcript);
+      alert("Transcript generated successfully!");
     } catch (error) {
       console.error("Failed to transfer audio", error);
+      alert("Something went wrong while processing the audio.");
     }
   };
 

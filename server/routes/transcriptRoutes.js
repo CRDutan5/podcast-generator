@@ -1,8 +1,11 @@
 import express from "express";
-import { generateTranscript } from "../controllers/transcriptController.js";
+import {
+  generateTranscript,
+  uploadAudio,
+} from "../controllers/transcriptController.js";
 
 const transcriptRouter = express.Router();
 
-transcriptRouter.post("/generate-transcript", generateTranscript);
+transcriptRouter.post("/generate-transcript", uploadAudio, generateTranscript);
 
 export default transcriptRouter;
