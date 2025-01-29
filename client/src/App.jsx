@@ -76,6 +76,8 @@ function App() {
         throw new Error("Failed to generate transcript");
       }
       const data = await response.json();
+      setPodcastScript(data.transcript);
+      setDisplayPlayButton(true);
       console.log("Transcript:", data.transcript);
       alert("Transcript generated successfully!");
     } catch (error) {
@@ -83,6 +85,8 @@ function App() {
       alert("Something went wrong while processing the audio.");
     }
   };
+
+  console.log(podcastScript);
 
   const playTextToSpeech = () => {
     if (speechSynthesis.paused && speechSynthesis.speaking) {
@@ -108,65 +112,77 @@ function App() {
   console.log("file", file);
 
   return (
-    <div className="flex flex-col items-center gap-y-6 justify-center align-middle min-h-screen">
-      <div>
-        <h1 className="text-7xl">Podcast Generator</h1>
-      </div>
-      <div className="flex flex-row gap-y-6 gap-x-6">
-        <button
-          className=" border-2 border-black p-2 hover:cursor-grab"
-          id="file-upload"
-          onClick={handleTranscriptTypeSelection}
-        >
-          Upload Audio
-        </button>
-        <button
-          className="border-2 border-black p-2 hover:cursor-grab"
-          id="text-upload"
-          onClick={handleTranscriptTypeSelection}
-        >
-          Enter Transcript
-        </button>
-      </div>
-      <form
-        action="submit"
-        className="flex flex-col h-50 gap-y-6"
-        onSubmit={
-          transcriptType === "file-upload"
-            ? handleAudioSubmit
-            : handleTranscriptSubmit
-        }
-      >
-        {transcriptType === "file-upload" ? (
-          <input type="file" onChange={handleFileChange} />
-        ) : (
-          <textarea
-            className="border-2 border-black w-2xl h-52"
-            onChange={handleTranscriptChange}
-            value={transcript}
-            disabled={textDisabled}
-          />
-        )}
-        {transcriptType && (
+    <div className="min-h-[100vh] flex align-middle flex-col justify-center items-center bg-blue-200">
+      <div className="flex flex-col bg-white items-center p-12 rounded-2xl w-[50vw] max-h-fit gap-y-6 justify-center align-middle mx-auto">
+        <div>
+          <h1 className="text-5xl">Podcast Generator</h1>
+        </div>
+        <div className="flex flex-row gap-y-6 gap-x-6 w-full justify-center mx-auto">
           <button
-            className="border-2 border-black p-2 hover:cursor-grab"
-            type="submit"
+            className=" border-2 border-black p-2 rounded-xl w-full font-bold text-white bg-blue-500 hover:cursor-grab"
+            id="file-upload"
+            onClick={handleTranscriptTypeSelection}
           >
-            Generate Podcast
+            Upload Audio
+          </button>
+          <button
+            className="border-2 border-black p-2 w-full rounded-xl font-extrabold text-white bg-blue-500 hover:cursor-grab"
+            id="text-upload"
+            onClick={handleTranscriptTypeSelection}
+          >
+            Enter Transcript
+          </button>
+        </div>
+        <form
+          action="submit"
+          className="flex flex-col w-full gap-y-6"
+          onSubmit={
+            transcriptType === "file-upload"
+              ? handleAudioSubmit
+              : handleTranscriptSubmit
+          }
+        >
+          {transcriptType === "file-upload" ? (
+            <input
+              type="file"
+              onChange={handleFileChange}
+              className="border-2 border-black max-w-fit"
+            />
+          ) : (
+            <textarea
+              className="border-2 border-black w-full h-52"
+              onChange={handleTranscriptChange}
+              value={transcript}
+              disabled={textDisabled}
+            />
+          )}
+          {transcriptType && (
+            <button
+              className="border-2 border-black p-2 w-full rounded-xl font-extrabold text-white bg-blue-500 hover:cursor-grab"
+              type="submit"
+            >
+              Generate Podcast
+            </button>
+          )}
+        </form>
+        {displayPlayButton && (
+          <button
+            className="border-2 border-black p-2 w-full rounded-xl font-extrabold text-white bg-blue-500"
+            onClick={playTextToSpeech}
+          >
+            Play!
           </button>
         )}
-      </form>
-      {displayPlayButton && (
-        <button
-          className="border-2 border-black p-2 hover:cursor-grab w-100"
-          onClick={playTextToSpeech}
-        >
-          Play!
-        </button>
-      )}
-      {speechSynthesis.speaking && (
-        <button onClick={pauseTextToSpeech}>Pause ||</button>
-      )}
+        {speechSynthesis.speaking && (
+          <button
+            onClick={pauseTextToSpeech}
+            className="border-2 border-black p-2 w-full rounded-xl font-extrabold text-white bg-blue-500"
+          >
+            Pause ||
+          </button>
+        )}
+        {podcastScript && <p>{podcastScript}</p>}
+      </div>
     </div>
   );
 }
